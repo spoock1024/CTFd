@@ -80,6 +80,7 @@ function submitkey(chal, key, nonce) {
             $("#answer-input").val("");
             $("#answer-input").removeClass("wrong");
             $("#answer-input").addClass("correct");
+            setTimeout("window.location.reload()",1000);
         }
         else if (data == 2){ // Challenge already solved
             $("#already-solved").slideDown();

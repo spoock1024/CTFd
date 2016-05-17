@@ -39,12 +39,15 @@ def chals():
                 return redirect('/')
     if can_view_challenges():
         chals = Challenges.query.filter(or_(Challenges.hidden != True, Challenges.hidden == None)).add_columns('id', 'name', 'value', 'description', 'category').order_by(Challenges.value).all()
-
+        solved_chals = [solved_chal.chalid for solved_chal in Solves.query.filter_by(teamid=session['id']).add_conlums("chalid").all()]
         json = {'game':[]}
         for x in chals:
             tags = [tag.tag for tag in Tags.query.add_columns('tag').filter_by(chal=x[1]).all()]
             files = [ str(f.location) for f in Files.query.filter_by(chal=x.id).all() ]
-            json['game'].append({'id':x[1], 'name':x[2], 'value':x[3], 'description':x[4], 'category':x[5], 'files':files, 'tags':tags})
+            solved = False
+            if x[1] in solved_chals:
+                solved = True
+            json['game'].append({'id':x[1], 'name':x[2], 'value':x[3], 'description':x[4], 'category':x[5], 'files':files, 'tags':tags,'solved':solved})
 
         db.session.close()
         return jsonify(json)

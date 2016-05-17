@@ -39,7 +39,7 @@ def chals():
                 return redirect('/')
     if can_view_challenges():
         chals = Challenges.query.filter(or_(Challenges.hidden != True, Challenges.hidden == None)).add_columns('id', 'name', 'value', 'description', 'category').order_by(Challenges.value).all()
-        solved_chals = [solved_chal.chalid for solved_chal in Solves.query.filter_by(teamid=session['id']).add_conlums("chalid").all()]
+        solved_chals = [solved_chal.chalid for solved_chal in Solves.query.filter_by(teamid=session['id']).add_columns("chalid").all()]
         json = {'game':[]}
         for x in chals:
             tags = [tag.tag for tag in Tags.query.add_columns('tag').filter_by(chal=x[1]).all()]

@@ -182,7 +182,12 @@ function loadchals() {
             var chalid = chalinfo.name.replace(/ /g,"-").hashCode();
             var catid = chalinfo.category.replace(/ /g,"-").hashCode();
             var chalwrap = $("<div id='{0}' class='challenge-wrapper col-md-2'></div>".format(chalid));
-            var chalbutton = $("<button class='challenge-button trigger theme-background hide-text' value='{0}' data-toggle='modal' data-target='#chal-window'></div>".format(chalinfo.id));
+            var solved = chalinfo.solved;
+            if(solved) {
+                var chalbutton = $("<button class='challenge-button trigger solved-challenge hide-text' value='{0}' data-toggle='modal' data-target='#chal-window'></div>".format(chalinfo.id));
+            } else {
+                var chalbutton = $("<button class='challenge-button trigger theme-background hide-text' value='{0}' data-toggle='modal' data-target='#chal-window'></div>".format(chalinfo.id));
+            }
             var chalheader = $("<h5>{0}</h5>".format(chalinfo.name));
             var chalscore = $("<span>{0}</span>".format(chalinfo.value));
             chalbutton.append(chalheader);

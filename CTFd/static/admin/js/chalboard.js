@@ -152,6 +152,18 @@ function deletefile(chal, file, elem){
     });
 }
 
+function loadcategories() {
+    $.get("/chals/categories",function(data){
+        categories = data["categories"];
+        category_elements = $("#category");        
+        for(var i=0;i<categories.length;i++) {
+            category = categories[i];
+            var option = $("<option value="+category+"></option>").text(category);
+            category_elements.append(option);
+        }
+        category_elements.append('<option id="create_category" value="new">new</option>')
+    });
+}
 
 function loadchals(){
     $('#challenges').empty();
@@ -187,9 +199,25 @@ function loadchals(){
             $('#new-chal-title').text($($(this).siblings()[0]).text().trim());
             $('#new-challenge').modal();
         });
+            
+        loadcategories();
 
     });
 }
+$('#category').change(function(e) {
+    var option = $(this).find('option:selected').val();
+    if(option == "new") {
+        $("#create-category").modal();
+    }
+});
+
+$(".create-category").click(function(e) {
+    var category = $(".category").val();
+    category_elements = $("#category");
+    var option = $("<option value="+category+"></option>").text(category);
+    category_elements.prepend(option);
+    category_elements.val(category);
+});
 
 $('#submit-key').click(function (e) {
     submitkey($('#chalid').val(), $('#answer').val())

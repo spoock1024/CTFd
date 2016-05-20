@@ -198,3 +198,11 @@ def chal(chalid):
             return "2" # challenge was already solved
     else:
         return "-1"
+
+@challenges.route('/chals/categories',methods=['GET'])
+def all_categories():
+    json_data ={'categories':[]}
+    categories = Challenges.query.add_columns('category').group_by(Challenges.category).all()
+    for x in categories:
+        json_data["categories"].append(x.category)
+    return jsonify(json_data)

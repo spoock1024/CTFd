@@ -17,8 +17,13 @@
             <input name='nonce' type='hidden' value="{{ nonce }}">
 
             <div class="form-group">
-                <label for="ctf_name">CTF Name:</label>
+                <labls
                 <input class="form-control" id='ctf_name' name='ctf_name' type='text' placeholder="CTF Name" {% if ctf_name is defined and ctf_name != None %}value="{{ ctf_name }}"{% endif %}>
+            </div>
+
+             <div class="form-group">
+                <label for="host_ip">HOST IP:</label>
+                <input class="form-control" id='host_ip' name='host_ip' type='text' placeholder="127.0.0.1" {% if host_ip is defined and host_ip != None %}value="{{ host_ip }}"{% endif %}>
             </div>
 
             <div class="form-group">

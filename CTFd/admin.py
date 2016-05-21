@@ -85,6 +85,8 @@ def admin_config():
 
         ctf_name = set_config("ctf_name", request.form.get('ctf_name', None))
 
+        host_ip = set_config("host_ip",request.form.get("host_ip",None));
+
         mg_base_url = set_config("mg_base_url", request.form.get('mg_base_url', None))
         mg_api_key = set_config("mg_api_key", request.form.get('mg_api_key', None))
 
@@ -103,6 +105,7 @@ def admin_config():
         return redirect(url_for('admin.admin_config'))
 
     ctf_name = get_config('ctf_name')
+    host_ip = get_config('host_ip')
     max_tries = get_config('max_tries')
 
     mail_server = get_config('mail_server')
@@ -151,6 +154,7 @@ def admin_config():
 
     return render_template('admin/config.html',
                            ctf_name=ctf_name,
+                           host_ip=host_ip,
                            start=start,
                            end=end,
                            max_tries=max_tries,

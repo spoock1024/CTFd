@@ -14,6 +14,7 @@ import hashlib
 import time
 import re
 import os
+import subprocess
 import json
 import datetime
 import calendar
@@ -785,9 +786,13 @@ def admin_create_chal():
 
     ## TODO: Expand to support multiple flags
     flags = [{'flag':request.form['key'], 'type':int(request.form['key_type[0]'])}]
-
+    pwnip = request.form["PWNIP"]
+    pwnport = request.form["PWNPORT"]
+    # add pwn info to the desc
+    desc = request.form["desc"]
+    desc += "nc:"+pwnip+" "+pwnport
     # Create challenge
-    chal = Challenges(request.form['name'], request.form['desc'], request.form['value'], request.form['category'], flags)
+    chal = Challenges(request.form['name'], desc, request.form['value'], request.form['category'], flags)
     if 'hidden' in request.form:
         chal.hidden = True
     else:
@@ -795,6 +800,7 @@ def admin_create_chal():
     db.session.add(chal)
     db.session.commit()
 
+    pwnmd5path = None
     for f in files:
         filename = secure_filename(f.filename)
 
@@ -802,14 +808,21 @@ def admin_create_chal():
             continue
 
         md5hash = hashlib.md5(os.urandom(64)).hexdigest()
-
         if not os.path.exists(os.path.join(os.path.normpath(app.static_folder), 'uploads', md5hash)):
             os.makedirs(os.path.join(os.path.normpath(app.static_folder), 'uploads', md5hash))
 
         f.save(os.path.join(os.path.normpath(app.static_folder), 'uploads', md5hash, filename))
         db_f = Files(chal.id, os.path.join('static', 'uploads', md5hash, filename))
         db.session.add(db_f)
-
+        pwnmd5path = os.path.join(os.path.normpath(app.static_folder), 'uploads', md5hash, filename)
+    
+    # execute the bash script to open the PWN
+    if request.form["category"].lower() == 'pwn':
+        root_path = os.path.abspath(os.path.dirname(__file__))
+        bash_path = root_path+"/addpwn.sh"
+        output = subprocess.Popen(bash_path+" "+pwnmd5path+" "+pwnport+" "+request.form["key"],shell=True,stdin=subprocess.PIPE)
+        out,error = output.communicate('123456'+'\n')
+        
     db.session.commit()
     db.session.close()
     return redirect(url_for('admin.admin_chals'))

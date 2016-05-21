@@ -296,3 +296,16 @@ $('#create-key').click(function(e){
 $(function(){
     loadchals();
 })
+
+function CheckData() {
+    inputs = $("#createchalform input .form-control");
+    result = true;
+    for (var i=0;i<5;i++) {
+        var input = inputs[i];
+        if(input.value.trim().length == 0) {
+            result = false;
+            break;
+        }
+    }
+    return true;
+}

@@ -298,13 +298,19 @@ $(function(){
 })
 
 function CheckData() {
-    inputs = $("#createchalform input .form-control");
-    result = true;
-    for (var i=0;i<5;i++) {
+    inputs = $("#createchalform input.form-control");
+    for (var i=0;i<inputs.length;i++) {
         var input = inputs[i];
         if(input.value.trim().length == 0) {
-            result = false;
-            break;
+            return false;
+        }
+    }
+    var selected_value = $("#category option:selected").text();
+    if(selected_value.toLowerCase() == "pwn") {
+        ip = $("#pwn_input input")[0];
+        port = $("#pwn_input input")[1];
+        if(ip.value.trim().length==0 || port.value.trim().length==0) {
+            return false;
         }
     }
     return true;

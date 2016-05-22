@@ -85,7 +85,7 @@ def admin_config():
 
         ctf_name = set_config("ctf_name", request.form.get('ctf_name', None))
 
-        host_ip = set_config("host_ip",request.form.get("host_ip",None));
+        host_ip = set_config("host_ip",request.form.get("host_ip",None))
 
         mg_base_url = set_config("mg_base_url", request.form.get('mg_base_url', None))
         mg_api_key = set_config("mg_api_key", request.form.get('mg_api_key', None))
@@ -865,3 +865,10 @@ def admin_update_chal():
     db.session.commit()
     db.session.close()
     return redirect(url_for('admin.admin_chals'))
+
+@admin.route('/admin/deafult/pwnurl',methods=['GET'])
+@admins_only
+def admin_get_pwnurl():
+    pwnurl = Config.query.add_columns(Config.value).filter_by(key="host_ip").first()
+    json_data = {'host_ip':str(pwnurl.value)}
+    return jsonify(json_data)

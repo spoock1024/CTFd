@@ -165,6 +165,13 @@ function loadcategories() {
     });
 }
 
+function loadurlofpwn() {
+    $.get("/admin/deafult/pwnurl",function(data) {
+        pwnurl = data["host_ip"];
+        $("input[name=PWNIP]").eq(0).val(pwnurl);
+    });
+}
+
 function loadchals(){
     $('#challenges').empty();
     $.post("/admin/chals", {
@@ -201,6 +208,7 @@ function loadchals(){
         });
             
         loadcategories();
+        loadurlofpwn();
 
     });
 }
@@ -302,6 +310,8 @@ function CheckData() {
     for (var i=0;i<inputs.length;i++) {
         var input = inputs[i];
         if(input.value.trim().length == 0) {
+            var jqeury_input = inputs.eq(i);
+            jqeury_input.css({border:"solid 3px red"});
             return false;
         }
     }
@@ -309,7 +319,8 @@ function CheckData() {
     if(selected_value.toLowerCase() == "pwn") {
         ip = $("#pwn_input input")[0];
         port = $("#pwn_input input")[1];
-        if(ip.value.trim().length==0 || port.value.trim().length==0) {
+        if(port.value.trim().length==0) {
+            $("#pwn_input input").eq(1).css({border:"solid 3px red"});
             return false;
         }
     }
